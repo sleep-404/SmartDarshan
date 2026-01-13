@@ -1,0 +1,27 @@
+{
+  "challenge_code": "100040",
+  "challenge_name": "Endowment - Smart Darshan",
+  "usecase_title": null,
+  "timeline": {
+    "launch_date": "20/10/2025",
+    "submission_deadline": "08/12/2025",
+    "shortlisting_date": "11/12/2025",
+    "presentation_date": "15/12/2025",
+    "winner_announcement": "18/12/2025",
+    "poc_deployment": "31/12/2025"
+  },
+  "details": {
+    "title": null,
+    "theme": "AI for Public Safety and Smart Governance",
+    "department": "Endowments Department, Government of Andhra Pradesh",
+    "challenge_teaser": null,
+    "challenge_overview": null,
+    "expected_solution": null,
+    "outcomes": null,
+    "expected_impact": null,
+    "dataset_access": null,
+    "poc_scope": null,
+    "poc_success_criteria": null,
+    "data_privacy": null
+  }
+}
