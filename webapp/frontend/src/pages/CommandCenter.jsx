@@ -1,4 +1,5 @@
 import { useData } from '../context/DataContext';
+import TempleLayout from '../components/TempleLayout';
 import {
   Users,
   Clock,
@@ -40,59 +41,6 @@ function StatCard({ title, value, subtitle, icon: Icon, trend, color = 'slate' }
           <span className="text-slate-600 capitalize">{trend}</span>
         </div>
       )}
-    </div>
-  );
-}
-
-function ZoneHeatmap({ zones }) {
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'critical': return 'bg-red-500';
-      case 'high': return 'bg-orange-500';
-      case 'moderate': return 'bg-amber-500';
-      case 'normal': return 'bg-emerald-500';
-      case 'low': return 'bg-blue-500';
-      default: return 'bg-slate-400';
-    }
-  };
-
-  const getStatusBg = (status) => {
-    switch (status) {
-      case 'critical': return 'bg-red-50 border-red-200';
-      case 'high': return 'bg-orange-50 border-orange-200';
-      case 'moderate': return 'bg-amber-50 border-amber-200';
-      case 'normal': return 'bg-emerald-50 border-emerald-200';
-      case 'low': return 'bg-blue-50 border-blue-200';
-      default: return 'bg-slate-50 border-slate-200';
-    }
-  };
-
-  return (
-    <div className="card">
-      <h3 className="card-header">Zone Density Overview</h3>
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
-        {zones?.map((zone) => (
-          <div
-            key={zone.id}
-            className={`p-4 rounded-lg border ${getStatusBg(zone.status)} transition-all duration-300`}
-          >
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-slate-700 truncate pr-2">
-                {zone.name}
-              </span>
-              <span className={`w-2 h-2 rounded-full ${getStatusColor(zone.status)}`} />
-            </div>
-            <div className="flex items-end justify-between">
-              <span className="text-2xl font-semibold text-slate-900">
-                {zone.density}%
-              </span>
-              <span className="text-xs text-slate-500">
-                {zone.currentCount?.toLocaleString()} people
-              </span>
-            </div>
-          </div>
-        ))}
-      </div>
     </div>
   );
 }
@@ -235,8 +183,8 @@ export default function CommandCenter() {
         />
       </div>
 
-      {/* Zone Heatmap */}
-      <ZoneHeatmap zones={zones} />
+      {/* Interactive Temple Layout */}
+      <TempleLayout zones={zones} gates={gates} />
 
       {/* Bottom Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
