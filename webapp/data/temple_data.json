@@ -1,0 +1,510 @@
+{
+  "temple": {
+    "id": "SVSD",
+    "name": "Sri Venkateswara Swamy Vari Devasthanam",
+    "location": "Dwarakatirumala (Chinna Tirupathi)",
+    "district": "Eluru",
+    "state": "Andhra Pradesh",
+    "coordinates": {
+      "lat": 16.9499,
+      "lng": 81.2991
+    }
+  },
+  "realtime": {
+    "lastUpdated": "2026-01-14T21:22:40.183Z",
+    "currentFootfall": 15997,
+    "avgWaitTime": 109,
+    "activeAlerts": 2,
+    "overallDensity": 90
+  },
+  "zones": [
+    {
+      "id": "temple-core",
+      "name": "Temple & Core Areas",
+      "density": 88,
+      "status": "critical",
+      "cameras": 45,
+      "currentCount": 2640,
+      "capacity": 3000,
+      "trend": "increasing"
+    },
+    {
+      "id": "darshan-queue",
+      "name": "Darshan & Queue",
+      "density": 92,
+      "status": "critical",
+      "cameras": 52,
+      "currentCount": 4600,
+      "capacity": 5000,
+      "waitTime": 65,
+      "trend": "stable"
+    },
+    {
+      "id": "parking",
+      "name": "Parking & Roads",
+      "density": 90,
+      "status": "critical",
+      "cameras": 38,
+      "currentCount": 2700,
+      "capacity": 3000,
+      "availableSlots": 340,
+      "trend": "increasing"
+    },
+    {
+      "id": "choulties",
+      "name": "Choulties & Dormitory",
+      "density": 94,
+      "status": "critical",
+      "cameras": 28,
+      "currentCount": 1410,
+      "capacity": 1500,
+      "trend": "stable"
+    },
+    {
+      "id": "sub-temples",
+      "name": "Sub Temples",
+      "density": 86,
+      "status": "critical",
+      "cameras": 24,
+      "currentCount": 1032,
+      "capacity": 1200,
+      "trend": "decreasing"
+    },
+    {
+      "id": "tanks",
+      "name": "Boats & Tanks",
+      "density": 81,
+      "status": "high",
+      "cameras": 18,
+      "currentCount": 810,
+      "capacity": 1000,
+      "trend": "stable"
+    },
+    {
+      "id": "counters",
+      "name": "Counters",
+      "density": 92,
+      "status": "critical",
+      "cameras": 32,
+      "currentCount": 1840,
+      "capacity": 2000,
+      "trend": "increasing"
+    },
+    {
+      "id": "gosala",
+      "name": "Gosala",
+      "density": 91,
+      "status": "critical",
+      "cameras": 12,
+      "currentCount": 455,
+      "capacity": 500,
+      "trend": "stable"
+    },
+    {
+      "id": "kesakhandana",
+      "name": "Kesakhandana Sala",
+      "density": 94,
+      "status": "critical",
+      "cameras": 15,
+      "currentCount": 470,
+      "capacity": 500,
+      "trend": "stable"
+    },
+    {
+      "id": "annadanam",
+      "name": "Annadanam",
+      "density": 94,
+      "status": "critical",
+      "cameras": 35,
+      "currentCount": 1880,
+      "capacity": 2000,
+      "trend": "increasing"
+    },
+    {
+      "id": "prasadam",
+      "name": "Prasadam Preparation",
+      "density": 93,
+      "status": "critical",
+      "cameras": 25,
+      "currentCount": 465,
+      "capacity": 500,
+      "trend": "stable"
+    }
+  ],
+  "gates": [
+    {
+      "id": "south-gopuram",
+      "name": "South Raja Gopuram",
+      "type": "entry-exit",
+      "status": "open",
+      "entryRate": 102,
+      "exitRate": 43,
+      "congestion": 31,
+      "recommendation": null
+    },
+    {
+      "id": "east-gopuram",
+      "name": "East Gopuram",
+      "type": "entry-exit",
+      "status": "open",
+      "entryRate": 37,
+      "exitRate": 49,
+      "congestion": 28,
+      "recommendation": "Increase entry flow"
+    },
+    {
+      "id": "west-gopuram",
+      "name": "West Gopuram",
+      "type": "entry-exit",
+      "status": "restricted",
+      "entryRate": 43,
+      "exitRate": 21,
+      "congestion": 30,
+      "recommendation": "Open for more entry"
+    },
+    {
+      "id": "north-gopuram",
+      "name": "North Gopuram",
+      "type": "entry-only",
+      "status": "open",
+      "entryRate": 26,
+      "exitRate": 0,
+      "congestion": 21,
+      "recommendation": null
+    }
+  ],
+  "alerts": [
+    {
+      "id": "alert-001",
+      "type": "warning",
+      "severity": "high",
+      "zone": "darshan-queue",
+      "message": "Queue density exceeding 85% threshold",
+      "timestamp": "2026-01-15T02:25:00Z",
+      "acknowledged": false,
+      "autoTriggered": true
+    },
+    {
+      "id": "alert-002",
+      "type": "info",
+      "severity": "medium",
+      "zone": "parking",
+      "message": "Parking Zone A nearing capacity (85%)",
+      "timestamp": "2026-01-15T02:20:00Z",
+      "acknowledged": true,
+      "autoTriggered": true
+    },
+    {
+      "id": "alert-003",
+      "type": "resolved",
+      "severity": "low",
+      "zone": "counters",
+      "message": "Counter queue normalized",
+      "timestamp": "2026-01-15T02:15:00Z",
+      "acknowledged": true,
+      "autoTriggered": true
+    }
+  ],
+  "forecast": {
+    "hourly": [
+      {
+        "hour": "06:00",
+        "predicted": 2500,
+        "actual": 2380
+      },
+      {
+        "hour": "07:00",
+        "predicted": 4200,
+        "actual": 4150
+      },
+      {
+        "hour": "08:00",
+        "predicted": 6800,
+        "actual": 6920
+      },
+      {
+        "hour": "09:00",
+        "predicted": 9200,
+        "actual": 9450
+      },
+      {
+        "hour": "10:00",
+        "predicted": 11500,
+        "actual": 11200
+      },
+      {
+        "hour": "11:00",
+        "predicted": 13200,
+        "actual": 12847
+      },
+      {
+        "hour": "12:00",
+        "predicted": 14500,
+        "actual": null
+      },
+      {
+        "hour": "13:00",
+        "predicted": 13800,
+        "actual": null
+      },
+      {
+        "hour": "14:00",
+        "predicted": 11200,
+        "actual": null
+      },
+      {
+        "hour": "15:00",
+        "predicted": 9500,
+        "actual": null
+      },
+      {
+        "hour": "16:00",
+        "predicted": 8200,
+        "actual": null
+      },
+      {
+        "hour": "17:00",
+        "predicted": 7100,
+        "actual": null
+      },
+      {
+        "hour": "18:00",
+        "predicted": 6200,
+        "actual": null
+      },
+      {
+        "hour": "19:00",
+        "predicted": 4800,
+        "actual": null
+      },
+      {
+        "hour": "20:00",
+        "predicted": 3200,
+        "actual": null
+      }
+    ],
+    "daily": [
+      {
+        "date": "2026-01-15",
+        "predicted": 45000,
+        "event": "Regular Wednesday"
+      },
+      {
+        "date": "2026-01-16",
+        "predicted": 42000,
+        "event": "Regular Thursday"
+      },
+      {
+        "date": "2026-01-17",
+        "predicted": 48000,
+        "event": "Friday"
+      },
+      {
+        "date": "2026-01-18",
+        "predicted": 72000,
+        "event": "Saturday"
+      },
+      {
+        "date": "2026-01-19",
+        "predicted": 68000,
+        "event": "Sunday"
+      },
+      {
+        "date": "2026-01-20",
+        "predicted": 38000,
+        "event": "Regular Monday"
+      },
+      {
+        "date": "2026-01-21",
+        "predicted": 35000,
+        "event": "Regular Tuesday"
+      }
+    ],
+    "weather": {
+      "temperature": 26,
+      "humidity": 72,
+      "condition": "Partly Cloudy",
+      "forecast": "Clear skies expected"
+    },
+    "confidence": 87
+  },
+  "chatbot": {
+    "totalQueries": 4136,
+    "activeConversations": 53,
+    "languages": {
+      "telugu": 2180,
+      "hindi": 1024,
+      "english": 643
+    },
+    "categories": {
+      "waitTimes": 1245,
+      "facilities": 892,
+      "navigation": 756,
+      "safety": 412,
+      "general": 542
+    },
+    "accuracy": 84,
+    "escalatedQueries": 23,
+    "recentQueries": [
+      {
+        "id": "q-001",
+        "language": "telugu",
+        "query": "దర్శనానికి ఎంత సమయం పడుతుంది?",
+        "translation": "How long for darshan?",
+        "response": "Current wait time is approximately 45 minutes",
+        "timestamp": "2026-01-15T02:28:00Z",
+        "successful": true
+      },
+      {
+        "id": "q-002",
+        "language": "hindi",
+        "query": "पार्किंग कहाँ है?",
+        "translation": "Where is parking?",
+        "response": "Parking is available at Zone A (340 slots) and Zone B (220 slots)",
+        "timestamp": "2026-01-15T02:27:00Z",
+        "successful": true
+      },
+      {
+        "id": "q-003",
+        "language": "english",
+        "query": "Where is the nearest toilet?",
+        "response": "Nearest toilet is 50m east of your location near East Gopuram",
+        "timestamp": "2026-01-15T02:26:00Z",
+        "successful": true
+      }
+    ]
+  },
+  "systemHealth": {
+    "cameras": {
+      "total": 324,
+      "online": 318,
+      "offline": 6,
+      "maintenance": 0
+    },
+    "vms": {
+      "status": "healthy",
+      "cpu": 20,
+      "memory": 41,
+      "storage": 58
+    },
+    "network": {
+      "status": "stable",
+      "latency": 12,
+      "bandwidth": 78
+    },
+    "edgeNodes": [
+      {
+        "id": "edge-01",
+        "zone": "Temple Core",
+        "status": "online",
+        "load": 67
+      },
+      {
+        "id": "edge-02",
+        "zone": "Queue Area",
+        "status": "online",
+        "load": 82
+      },
+      {
+        "id": "edge-03",
+        "zone": "Parking",
+        "status": "online",
+        "load": 45
+      },
+      {
+        "id": "edge-04",
+        "zone": "Annadanam",
+        "status": "offline",
+        "load": 0
+      }
+    ],
+    "paSystem": {
+      "status": "operational",
+      "zones": 11,
+      "activeZones": 11
+    },
+    "lastSync": "2026-01-14T21:22:40.183Z"
+  },
+  "videoAnalytics": {
+    "processingFps": 24,
+    "detectionAccuracy": 86,
+    "anomaliesDetected": 3,
+    "crowdFlowDirection": "inward",
+    "hotspots": [
+      {
+        "zone": "darshan-queue",
+        "severity": "high",
+        "coordinates": [
+          16.9501,
+          81.2993
+        ]
+      },
+      {
+        "zone": "south-gopuram",
+        "severity": "medium",
+        "coordinates": [
+          16.9498,
+          81.2989
+        ]
+      }
+    ],
+    "cameras": [
+      {
+        "id": "CAM-001",
+        "zone": "temple-core",
+        "density": 78,
+        "status": "active",
+        "anomaly": false
+      },
+      {
+        "id": "CAM-002",
+        "zone": "temple-core",
+        "density": 72,
+        "status": "active",
+        "anomaly": false
+      },
+      {
+        "id": "CAM-003",
+        "zone": "darshan-queue",
+        "density": 92,
+        "status": "active",
+        "anomaly": true
+      },
+      {
+        "id": "CAM-004",
+        "zone": "darshan-queue",
+        "density": 88,
+        "status": "active",
+        "anomaly": false
+      },
+      {
+        "id": "CAM-005",
+        "zone": "parking",
+        "density": 55,
+        "status": "active",
+        "anomaly": false
+      },
+      {
+        "id": "CAM-006",
+        "zone": "parking",
+        "density": 48,
+        "status": "active",
+        "anomaly": false
+      },
+      {
+        "id": "CAM-007",
+        "zone": "annadanam",
+        "density": 65,
+        "status": "active",
+        "anomaly": false
+      },
+      {
+        "id": "CAM-008",
+        "zone": "counters",
+        "density": 74,
+        "status": "active",
+        "anomaly": false
+      }
+    ]
+  }
+}
