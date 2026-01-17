@@ -1,0 +1,261 @@
+{
+  "temple": {
+    "name": "Sri Venkateswara Swamy Vari Devasthanam",
+    "location": "Dwarakatirumala, Eluru District",
+    "dayType": "WEEKEND",
+    "peakWindow": {
+      "start": "8:00 AM",
+      "end": "1:30 PM",
+      "isActive": true
+    }
+  },
+  "user": {
+    "name": "Arun Kumar",
+    "initials": "AK",
+    "role": "Operations Manager"
+  },
+  "systemStatus": "operational",
+  "dataFreshness": {
+    "status": "live",
+    "lastUpdate": null
+  },
+  "metrics": {
+    "liveFootfall": {
+      "current": 2847,
+      "trend": "+12%",
+      "trendDirection": "up",
+      "todayTotal": 8934
+    },
+    "darshanWaitTime": {
+      "average": 47,
+      "unit": "min",
+      "shortestGate": "South Gate",
+      "shortestTime": 32
+    },
+    "crowdMovement": {
+      "status": "SLOW",
+      "level": 2,
+      "velocity": 0.4,
+      "unit": "m/s"
+    },
+    "gates": {
+      "open": 3,
+      "restricted": 1,
+      "summary": [
+        { "id": "south", "label": "S", "load": 78, "status": "open" },
+        { "id": "east", "label": "E", "load": 45, "status": "open" },
+        { "id": "west", "label": "W", "load": 92, "status": "restricted" },
+        { "id": "north", "label": "N", "load": 34, "status": "open" }
+      ]
+    }
+  },
+  "compositeScores": {
+    "crowdStress": {
+      "value": 67,
+      "trend": "+12",
+      "trendPeriod": "from 1hr ago",
+      "formula": "Density + Velocity + Queue"
+    },
+    "zoneHealth": {
+      "healthy": 8,
+      "warning": 2,
+      "critical": 1,
+      "total": 11,
+      "needsAttention": 3
+    },
+    "incidentRisk": {
+      "value": 23,
+      "level": "Low Risk",
+      "description": "Based on current conditions"
+    },
+    "devoteeExperience": {
+      "value": 71,
+      "level": "Good",
+      "formula": "Wait + Feedback + Safety"
+    }
+  },
+  "zones": [
+    { "id": "temple-core", "name": "TEMPLE CORE", "density": 82, "count": 847, "trend": "stable" },
+    { "id": "darshan-queue", "name": "DARSHAN QUEUE", "density": 91, "count": 1234, "trend": "increasing" },
+    { "id": "counters", "name": "COUNTERS", "density": 58, "count": 312, "trend": "stable" },
+    { "id": "prasadam", "name": "PRASADAM", "density": 73, "count": 456, "trend": "stable" },
+    { "id": "annadanam", "name": "ANNADANAM", "density": 67, "count": 523, "trend": "decreasing" },
+    { "id": "parking", "name": "PARKING", "density": 45, "count": 892, "trend": "stable" },
+    { "id": "choulties", "name": "CHOULTIES", "density": 41, "count": 234, "trend": "stable" },
+    { "id": "sub-temples", "name": "SUB-TEMPLES", "density": 38, "count": 189, "trend": "stable" },
+    { "id": "gosala", "name": "GOSALA", "density": 29, "count": 67, "trend": "stable" },
+    { "id": "kesakhandana", "name": "KESAKHANDANA", "density": 52, "count": 145, "trend": "stable" },
+    { "id": "boats-tanks", "name": "BOATS & TANKS", "density": 35, "count": 98, "trend": "stable" }
+  ],
+  "gateDetails": [
+    {
+      "id": "south",
+      "name": "South Raja Gopuram",
+      "type": "Entry/Exit",
+      "status": "open",
+      "load": 78,
+      "flowRate": 142,
+      "flowDirection": "inflow"
+    },
+    {
+      "id": "east",
+      "name": "East Gopuram",
+      "type": "Entry/Exit",
+      "status": "open",
+      "load": 45,
+      "flowRate": 87,
+      "flowDirection": "inflow"
+    },
+    {
+      "id": "west",
+      "name": "West Gopuram",
+      "type": "Entry/Exit",
+      "status": "restricted",
+      "load": 92,
+      "flowRate": 31,
+      "flowDirection": "inflow"
+    },
+    {
+      "id": "north",
+      "name": "North Gopuram",
+      "type": "Entry Only",
+      "status": "open",
+      "load": 34,
+      "flowRate": 156,
+      "flowDirection": "inflow"
+    }
+  ],
+  "alerts": [
+    {
+      "id": 1,
+      "severity": "critical",
+      "time": "10:42 AM",
+      "zone": "West Gopuram",
+      "message": "Density at 94% capacity — restrict entry recommended",
+      "status": "unacknowledged"
+    },
+    {
+      "id": 2,
+      "severity": "critical",
+      "time": "10:38 AM",
+      "zone": "Darshan Queue",
+      "message": "Movement velocity critical (0.2 m/s) — congestion forming",
+      "status": "unacknowledged"
+    },
+    {
+      "id": 3,
+      "severity": "warning",
+      "time": "10:35 AM",
+      "zone": "Parking",
+      "message": "East parking lot at 87% — approaching capacity",
+      "status": "acknowledged"
+    },
+    {
+      "id": 4,
+      "severity": "warning",
+      "time": "10:31 AM",
+      "zone": "Annadanam",
+      "message": "Queue length exceeds 200 — additional counters recommended",
+      "status": "unacknowledged"
+    },
+    {
+      "id": 5,
+      "severity": "warning",
+      "time": "10:28 AM",
+      "zone": "North Gopuram",
+      "message": "Entry rate spike detected (+340% vs hourly avg)",
+      "status": "acknowledged"
+    },
+    {
+      "id": 6,
+      "severity": "info",
+      "time": "10:25 AM",
+      "zone": "Prasadam",
+      "message": "Counter 3 service rate below average",
+      "status": "acknowledged"
+    },
+    {
+      "id": 7,
+      "severity": "info",
+      "time": "10:22 AM",
+      "zone": "Temple Core",
+      "message": "Density approaching 80% threshold",
+      "status": "acknowledged"
+    },
+    {
+      "id": 8,
+      "severity": "info",
+      "time": "10:18 AM",
+      "zone": "Counters",
+      "message": "Ticket counter 2 queue length increasing",
+      "status": "acknowledged"
+    },
+    {
+      "id": 9,
+      "severity": "info",
+      "time": "10:15 AM",
+      "zone": "System",
+      "message": "Model prediction confidence dropped to 78%",
+      "status": "auto-resolved"
+    },
+    {
+      "id": 10,
+      "severity": "info",
+      "time": "10:10 AM",
+      "zone": "Choulties",
+      "message": "Occupancy recovered to normal levels",
+      "status": "auto-resolved"
+    }
+  ],
+  "alertSparkline": [
+    2, 3, 2, 4, 3, 5, 4, 6, 5, 4, 3, 4, 5, 6, 7, 6, 5, 4, 5, 6,
+    7, 8, 7, 6, 5, 6, 7, 8, 9, 8, 7, 6, 5, 6, 7, 8, 9, 10, 9, 8,
+    7, 8, 9, 10, 11, 10, 9, 8, 9, 10, 11, 10, 9, 10, 11, 10, 9, 10, 10, 10
+  ],
+  "navigation": [
+    { "id": "command-center", "label": "Command Center", "icon": "LayoutDashboard", "group": 1 },
+    { "id": "video-analytics", "label": "Video Analytics", "icon": "Video", "group": 1 },
+    { "id": "crowd-forecast", "label": "Crowd Forecast", "icon": "TrendingUp", "group": 1 },
+    { "id": "gate-queue", "label": "Gate & Queue", "icon": "DoorOpen", "group": 1 },
+    { "id": "alerts", "label": "Alerts", "icon": "Bell", "group": 1, "badge": 2 },
+    { "id": "chatbot", "label": "Chatbot Monitor", "icon": "MessageCircle", "group": 1 },
+    { "id": "system-health", "label": "System Health", "icon": "Activity", "group": 1 },
+    { "id": "zone-monitor", "label": "Zone Monitor", "icon": "MapPin", "group": 2 },
+    { "id": "spatial-flow", "label": "Spatial Flow", "icon": "Route", "group": 2 },
+    { "id": "staff-deployment", "label": "Staff Deployment", "icon": "Users", "group": 2 },
+    { "id": "incidents", "label": "Incidents", "icon": "AlertTriangle", "group": 2 },
+    { "id": "feedback-analytics", "label": "Feedback Analytics", "icon": "MessageSquare", "group": 2 },
+    { "id": "analytics-reports", "label": "Analytics & Reports", "icon": "BarChart3", "group": 3 },
+    { "id": "amenities", "label": "Amenities", "icon": "Utensils", "group": 3 },
+    { "id": "parking", "label": "Parking", "icon": "Car", "group": 3 },
+    { "id": "settings", "label": "Settings", "icon": "Settings", "group": 3 }
+  ],
+  "quickActions": {
+    "gateRecommendation": {
+      "recommendation": "Restrict West Gopuram entry, redirect to South",
+      "confidence": 87,
+      "predictedImpact": "Reduce congestion by 23% in 15 minutes"
+    },
+    "paPresets": [
+      { "id": "queue-guidance", "label": "Queue Guidance" },
+      { "id": "safety-reminder", "label": "Safety Reminder" },
+      { "id": "gate-announcement", "label": "Gate Announcement" },
+      { "id": "custom", "label": "Custom Message" }
+    ],
+    "staffGroups": [
+      { "id": "security", "label": "Security" },
+      { "id": "temple-staff", "label": "Temple Staff" },
+      { "id": "sanitation", "label": "Sanitation" },
+      { "id": "volunteers", "label": "Volunteers" },
+      { "id": "medical", "label": "Medical" },
+      { "id": "all", "label": "All Staff" }
+    ],
+    "emergencyProtocols": [
+      { "id": "fire", "label": "Fire Emergency", "icon": "fire" },
+      { "id": "medical", "label": "Medical Emergency", "icon": "medical" },
+      { "id": "crowd-surge", "label": "Crowd Surge / Stampede Prevention", "icon": "crowd" },
+      { "id": "power-failure", "label": "Power Failure", "icon": "power" },
+      { "id": "natural-calamity", "label": "Natural Calamity", "icon": "calamity" }
+    ]
+  }
+}
