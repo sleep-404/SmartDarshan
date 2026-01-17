@@ -56,7 +56,7 @@ const getScoreColor = (score, thresholds = { low: 40, high: 70 }) => {
 // ============================================================================
 // SIDEBAR COMPONENT
 // ============================================================================
-function Sidebar({ activeItem, systemStatus, hasUnacknowledgedAlerts }) {
+function Sidebar({ activeItem, systemStatus, hasUnacknowledgedAlerts, isExpanded, onExpandChange }) {
   const renderNavGroup = (groupId) => {
     const items = NAV_ITEMS.filter(item => item.group === groupId);
     return items.map((item) => {
@@ -66,21 +66,30 @@ function Sidebar({ activeItem, systemStatus, hasUnacknowledgedAlerts }) {
       return (
         <button
           key={item.id}
-          className={`tooltip relative w-12 h-12 flex items-center justify-center rounded-lg transition-all duration-150 cursor-pointer
+          className={`relative h-11 flex items-center gap-3 rounded-lg transition-all duration-150 cursor-pointer
+            ${isExpanded ? 'w-full px-3' : 'w-11 justify-center'}
             ${isActive
-              ? 'bg-[rgba(14,165,233,0.1)] border-l-3 border-l-[#0EA5E9] -ml-[3px]'
+              ? 'bg-[rgba(14,165,233,0.1)] border-l-3 border-l-[#0EA5E9]'
               : 'hover:bg-[#1C2631]'
             }`}
-          data-tooltip={item.label}
           aria-label={item.label}
         >
           <Icon
             size={22}
             strokeWidth={1.5}
-            className={isActive ? 'text-[#0EA5E9]' : 'text-[#94A3B8] hover:text-[#F1F3F5]'}
+            className={`flex-shrink-0 ${isActive ? 'text-[#0EA5E9]' : 'text-[#94A3B8] group-hover:text-[#F1F3F5]'}`}
           />
+          {isExpanded && (
+            <span className={`text-sm font-medium whitespace-nowrap overflow-hidden ${
+              isActive ? 'text-[#0EA5E9]' : 'text-[#94A3B8]'
+            }`}>
+              {item.label}
+            </span>
+          )}
           {item.badge && hasUnacknowledgedAlerts && (
-            <span className="absolute top-2 right-2 w-2 h-2 bg-[#EF4444] rounded-full" />
+            <span className={`absolute w-2 h-2 bg-[#EF4444] rounded-full ${
+              isExpanded ? 'top-2 right-2' : 'top-1.5 right-1.5'
+            }`} />
           )}
         </button>
       );
@@ -89,40 +98,50 @@ function Sidebar({ activeItem, systemStatus, hasUnacknowledgedAlerts }) {
 
   return (
     <nav
-      className="fixed left-0 top-0 h-screen w-[72px] bg-[#141B24] border-r border-[#2A3542] flex flex-col z-[100]"
+      className={`fixed left-0 top-0 h-screen bg-[#141B24] border-r border-[#2A3542] flex flex-col z-[100] transition-all duration-300 ease-in-out ${
+        isExpanded ? 'w-[220px]' : 'w-[72px]'
+      }`}
       aria-label="Main navigation"
+      onMouseEnter={() => onExpandChange(true)}
+      onMouseLeave={() => onExpandChange(false)}
     >
       {/* Logo */}
-      <div className="h-[72px] flex items-center justify-center border-b border-[#2A3542]">
+      <div className={`h-[72px] flex items-center border-b border-[#2A3542] ${isExpanded ? 'px-5' : 'justify-center'}`}>
         <div className="text-[#D97706] font-bold text-xl tracking-tight">
-          <span className="inline-block" style={{ fontFamily: 'DM Sans, sans-serif' }}>SD</span>
+          <span className="inline-block" style={{ fontFamily: 'DM Sans, sans-serif' }}>
+            {isExpanded ? 'Smart Darshan' : 'SD'}
+          </span>
         </div>
       </div>
 
       {/* Navigation Groups */}
-      <div className="flex-1 flex flex-col items-center py-4 gap-1">
+      <div className={`flex-1 flex flex-col py-4 gap-1 overflow-y-auto overflow-x-hidden ${isExpanded ? 'px-3' : 'items-center'}`}>
         {renderNavGroup(1)}
 
         {/* Divider */}
-        <div className="w-8 h-px bg-[#2A3542] my-2" />
+        <div className={`h-px bg-[#2A3542] my-2 ${isExpanded ? 'w-full' : 'w-8'}`} />
 
         {renderNavGroup(2)}
 
         {/* Divider */}
-        <div className="w-8 h-px bg-[#2A3542] my-2" />
+        <div className={`h-px bg-[#2A3542] my-2 ${isExpanded ? 'w-full' : 'w-8'}`} />
 
         {renderNavGroup(3)}
       </div>
 
       {/* System Status Indicator */}
-      <div className="pb-6 flex justify-center">
+      <div className={`pb-6 flex items-center gap-2 ${isExpanded ? 'px-5' : 'justify-center'}`}>
         <div
-          className={`w-2.5 h-2.5 rounded-full ${
+          className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${
             systemStatus === 'operational' ? 'bg-[#22C55E]' :
             systemStatus === 'degraded' ? 'bg-[#F59E0B]' : 'bg-[#EF4444]'
           }`}
-          title={`System ${systemStatus}`}
         />
+        {isExpanded && (
+          <span className="text-xs text-[#64748B]">
+            System {systemStatus}
+          </span>
+        )}
       </div>
     </nav>
   );
@@ -1290,6 +1309,7 @@ function App() {
   const [error, setError] = useState(null);
   const [isOffline, setIsOffline] = useState(false);
   const [showOfflineBanner, setShowOfflineBanner] = useState(false);
+  const [sidebarExpanded, setSidebarExpanded] = useState(false);
 
   const fetchData = useCallback(async () => {
     try {
@@ -1356,10 +1376,15 @@ function App() {
         activeItem="command-center"
         systemStatus={data?.systemStatus || 'operational'}
         hasUnacknowledgedAlerts={hasUnacknowledgedAlerts}
+        isExpanded={sidebarExpanded}
+        onExpandChange={setSidebarExpanded}
       />
 
       {/* Main Content */}
-      <div className="ml-[72px] min-h-screen flex flex-col">
+      <div
+        className="min-h-screen flex flex-col transition-all duration-300 ease-in-out"
+        style={{ marginLeft: sidebarExpanded ? '220px' : '72px' }}
+      >
         {/* Header */}
         {data && (
           <Header
