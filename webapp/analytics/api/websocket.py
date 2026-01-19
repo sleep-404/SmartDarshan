@@ -5,8 +5,23 @@ from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 import asyncio
 import json
 import time
+import numpy as np
 
 from processors.video_processor import VideoProcessor
+
+
+class NumpyJSONEncoder(json.JSONEncoder):
+    """JSON encoder that handles numpy types."""
+    def default(self, obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        if isinstance(obj, np.floating):
+            return float(obj)
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return super().default(obj)
+
+
 from processors.gate_counter import BiDirectionalGateCounter
 from processors.flow_detector import FlowAnalyzer
 from processors.dwell_analyzer import DwellTimeAnalyzer
@@ -196,7 +211,7 @@ class ConnectionManager:
             return
 
         disconnected = set()
-        data = json.dumps(message)
+        data = json.dumps(message, cls=NumpyJSONEncoder)
 
         for websocket in self.active_connections[video_id]:
             try:
