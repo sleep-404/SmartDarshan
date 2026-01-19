@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Devotee Feedback Analysis | Dwarakatirumala Temple</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --severity-critical: #ef4444;
+            --severity-high: #f97316;
+            --severity-medium: #eab308;
+            --severity-low: #22c55e;
+            --complaint: #ef4444;
+            --grievance: #f97316;
+            --suggestion: #22c55e;
+            --border-color: #475569;
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+        .header {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header-left { display: flex; align-items: center; gap: 1rem; }
+        .logo {
+            width: 48px; height: 48px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem;
+        }
+        .header-title h1 { font-size: 1.25rem; font-weight: 600; }
+        .header-title p { font-size: 0.875rem; color: var(--text-secondary); }
+        .header-meta { text-align: right; font-size: 0.875rem; color: var(--text-secondary); }
+        .header-meta .event-name { color: var(--accent-blue); font-weight: 600; font-size: 1rem; }
+
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            gap: 1.5rem;
+            padding: 1.5rem 2rem;
+            max-height: calc(100vh - 80px);
+        }
+        .left-column { display: flex; flex-direction: column; gap: 1.5rem; overflow-y: auto; }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+        .stat-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 1.25rem;
+            border: 2px solid var(--border-color);
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+            cursor: pointer;
+            user-select: none;
+        }
+        .stat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+        .stat-card.filter-active { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+        .stat-card.complaints.filter-active { border-color: var(--complaint); }
+        .stat-card.grievances.filter-active { border-color: var(--grievance); }
+        .stat-card.suggestions.filter-active { border-color: var(--suggestion); }
+        .stat-card.sentiment { cursor: default; }
+        .stat-card .stat-icon {
+            width: 48px; height: 48px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 0.75rem;
+            font-size: 1.5rem;
+        }
+        .stat-card.complaints .stat-icon { background: rgba(239, 68, 68, 0.15); }
+        .stat-card.grievances .stat-icon { background: rgba(249, 115, 22, 0.15); }
+        .stat-card.suggestions .stat-icon { background: rgba(34, 197, 94, 0.15); }
+        .stat-card.sentiment .stat-icon { background: rgba(139, 92, 246, 0.15); }
+        .stat-card .stat-value { font-size: 2rem; font-weight: 700; line-height: 1; margin-bottom: 0.25rem; }
+        .stat-card.complaints .stat-value { color: var(--complaint); }
+        .stat-card.grievances .stat-value { color: var(--grievance); }
+        .stat-card.suggestions .stat-value { color: var(--suggestion); }
+        .stat-card.sentiment .stat-value { color: var(--severity-critical); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .stat-card .stat-label { font-size: 0.875rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
+
+        .priority-section {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+        .section-header {
+            display: flex; align-items: center; gap: 0.75rem;
+            margin-bottom: 1rem; padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .section-header h2 { font-size: 1rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+        .section-header .icon { font-size: 1.25rem; }
+        .priority-list { display: flex; flex-direction: column; gap: 1rem; }
+        .priority-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            border-left: 4px solid;
+            transition: transform 0.2s;
+        }
+        .priority-card:hover { transform: translateX(4px); }
+        .priority-card.critical { border-left-color: var(--severity-critical); }
+        .priority-card.high { border-left-color: var(--severity-high); }
+        .priority-card .priority-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; }
+        .priority-card .priority-title { font-weight: 600; font-size: 0.95rem; }
+        .priority-card .severity-badge { font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 4px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em; }
+        .severity-badge.critical { background: var(--severity-critical); color: white; }
+        .severity-badge.high { background: var(--severity-high); color: white; }
+        .priority-card .recommendation { font-size: 0.875rem; color: var(--text-secondary); display: flex; align-items: flex-start; gap: 0.5rem; }
+        .priority-card .recommendation::before { content: "→"; color: var(--accent-blue); flex-shrink: 0; }
+
+        .video-section {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; background: #000; }
+        .video-container video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        .video-controls {
+            display: flex; align-items: center; gap: 1rem;
+            padding: 0.75rem 1rem;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .play-btn {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: var(--accent-blue);
+            border: none; color: white;
+            font-size: 1.25rem;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: transform 0.2s, background 0.2s;
+        }
+        .play-btn:hover { transform: scale(1.1); background: #2563eb; }
+        .time-display { font-family: monospace; font-size: 0.9rem; color: var(--text-secondary); min-width: 100px; }
+        .progress-wrapper { flex: 1; position: relative; height: 24px; display: flex; align-items: center; }
+        .progress-bar-bg { width: 100%; height: 6px; background: var(--bg-secondary); border-radius: 3px; cursor: pointer; position: relative; }
+        .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple)); border-radius: 3px; width: 0%; transition: width 0.1s; }
+        .issue-markers-container { position: absolute; top: 0; left: 0; right: 0; height: 24px; pointer-events: none; }
+        .issue-marker {
+            position: absolute; top: 50%;
+            width: 14px; height: 14px;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer; pointer-events: auto;
+            border: 2px solid var(--bg-secondary);
+            transition: transform 0.2s;
+            z-index: 10;
+        }
+        .issue-marker:hover { transform: translate(-50%, -50%) scale(1.3); z-index: 20; }
+        .issue-marker.complaint { background: var(--complaint); }
+        .issue-marker.grievance { background: var(--grievance); }
+        .issue-marker.suggestion { background: var(--suggestion); }
+        .current-issue-banner {
+            padding: 1rem 1.5rem;
+            background: var(--bg-card);
+            min-height: 90px;
+            display: flex; align-items: center; gap: 1rem;
+        }
+        .current-issue-banner .timestamp {
+            background: var(--accent-blue); color: white;
+            padding: 0.35rem 0.85rem; border-radius: 6px;
+            font-weight: 600; font-family: monospace; font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+        .current-issue-banner .issue-text { flex: 1; }
+        .current-issue-banner .issue-text .category-line {
+            font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em;
+            margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.5rem;
+        }
+        .current-issue-banner .issue-text .translation { font-size: 1.05rem; color: var(--text-primary); line-height: 1.4; }
+        .current-issue-banner.empty { justify-content: center; color: var(--text-muted); font-style: italic; }
+
+        .right-column {
+            display: flex; flex-direction: column;
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+        .timeline-header {
+            padding: 1rem 1.25rem;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .timeline-header h2 { font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 0.5rem; }
+        .timeline-header .issue-count { background: var(--accent-blue); color: white; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.75rem; }
+        .timeline-list { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem; }
+        .issue-card {
+            background: var(--bg-card);
+            border-radius: 12px; padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            position: relative;
+        }
+        .issue-card:hover { background: #3d4a5c; }
+        .issue-card.active { border-color: var(--accent-blue); background: rgba(59, 130, 246, 0.1); box-shadow: 0 0 20px rgba(59, 130, 246, 0.2); }
+        .issue-card.dimmed { opacity: 0.3; transform: scale(0.98); }
+        .issue-card.highlighted { border-color: var(--accent-purple); background: rgba(139, 92, 246, 0.1); }
+        .issue-card.highlighted.complaint { border-color: var(--complaint); background: rgba(239, 68, 68, 0.1); }
+        .issue-card.highlighted.grievance { border-color: var(--grievance); background: rgba(249, 115, 22, 0.1); }
+        .issue-card.highlighted.suggestion { border-color: var(--suggestion); background: rgba(34, 197, 94, 0.1); }
+        .issue-card .card-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
+        .issue-card .timestamp { font-family: monospace; font-size: 0.875rem; background: var(--bg-secondary); padding: 0.25rem 0.5rem; border-radius: 4px; color: var(--text-secondary); }
+        .issue-card.active .timestamp { background: var(--accent-blue); color: white; }
+        .issue-card .category-badge { font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 4px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em; }
+        .category-badge.complaint { background: rgba(239, 68, 68, 0.2); color: var(--complaint); }
+        .category-badge.grievance { background: rgba(249, 115, 22, 0.2); color: var(--grievance); }
+        .category-badge.suggestion { background: rgba(34, 197, 94, 0.2); color: var(--suggestion); }
+        .issue-card .severity-dot { width: 8px; height: 8px; border-radius: 50%; margin-left: auto; }
+        .severity-dot.critical { background: var(--severity-critical); box-shadow: 0 0 8px var(--severity-critical); }
+        .severity-dot.high { background: var(--severity-high); box-shadow: 0 0 8px var(--severity-high); }
+        .severity-dot.medium { background: var(--severity-medium); }
+        .severity-dot.low { background: var(--severity-low); }
+        .issue-card .topic { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .issue-card .translation { font-size: 0.9rem; color: var(--text-primary); line-height: 1.5; }
+        .issue-card .original { font-size: 0.8rem; color: var(--text-muted); font-style: italic; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border-color); }
+        .legend { display: flex; gap: 1.5rem; padding: 0.75rem 1rem; background: var(--bg-card); border-top: 1px solid var(--border-color); font-size: 0.75rem; }
+        .legend-item { display: flex; align-items: center; gap: 0.5rem; color: var(--text-secondary); }
+        .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-secondary); }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+        @keyframes pulse { 0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.2); } 50% { box-shadow: 0 0 30px rgba(59, 130, 246, 0.4); } }
+        .issue-card.active { animation: pulse 2s infinite; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">🛕</div>
+            <div class="header-title">
+                <h1>Devotee Feedback Analysis Dashboard</h1>
+                <p>Sri Venkateswara Swamy Vari Devasthanam, Dwarakatirumala</p>
+            </div>
+        </div>
+        <div class="header-meta">
+            <div class="event-name" id="eventName">Mukkoti Ekadasi</div>
+            <div id="analysisDate">Analysis Generated: Jan 18, 2026</div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <div class="left-column">
+            <div class="stats-grid">
+                <div class="stat-card complaints" data-filter="complaint">
+                    <div class="stat-icon">⚠️</div>
+                    <div class="stat-value" id="complaintCount">0</div>
+                    <div class="stat-label">Complaints</div>
+                </div>
+                <div class="stat-card grievances" data-filter="grievance">
+                    <div class="stat-icon">😔</div>
+                    <div class="stat-value" id="grievanceCount">0</div>
+                    <div class="stat-label">Grievances</div>
+                </div>
+                <div class="stat-card suggestions" data-filter="suggestion">
+                    <div class="stat-icon">💡</div>
+                    <div class="stat-value" id="suggestionCount">0</div>
+                    <div class="stat-label">Suggestions</div>
+                </div>
+                <div class="stat-card sentiment">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-value" id="sentimentValue">--</div>
+                    <div class="stat-label">Sentiment</div>
+                </div>
+            </div>
+
+            <div class="priority-section">
+                <div class="section-header">
+                    <span class="icon">🚨</span>
+                    <h2>Top Priority Issues Requiring Immediate Action</h2>
+                </div>
+                <div class="priority-list" id="priorityList"></div>
+            </div>
+
+            <div class="video-section">
+                <div class="video-container">
+                    <video id="videoPlayer" controls>
+                        <source src="videos/WhatsApp Video 2026-01-19 at 12.07.11 AM.mp4" type="video/mp4">
+                        Your browser does not support the video element.
+                    </video>
+                </div>
+                <div class="video-controls">
+                    <button class="play-btn" id="playBtn">▶</button>
+                    <span class="time-display" id="timeDisplay">00:00 / 00:00</span>
+                    <div class="progress-wrapper">
+                        <div class="progress-bar-bg" id="progressBar">
+                            <div class="progress-bar-fill" id="progressFill"></div>
+                        </div>
+                        <div class="issue-markers-container" id="issueMarkers"></div>
+                    </div>
+                </div>
+                <div class="current-issue-banner empty" id="currentIssueBanner">
+                    <span>▶ Play video to see issues highlighted in real-time</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-column">
+            <div class="timeline-header">
+                <h2><span>📋</span> Issue Timeline <span class="issue-count" id="issueCount">0</span></h2>
+            </div>
+            <div class="timeline-list" id="timelineList"></div>
+            <div class="legend">
+                <div class="legend-item"><div class="legend-dot" style="background: var(--complaint)"></div><span>Complaint</span></div>
+                <div class="legend-item"><div class="legend-dot" style="background: var(--grievance)"></div><span>Grievance</span></div>
+                <div class="legend-item"><div class="legend-dot" style="background: var(--suggestion)"></div><span>Suggestion</span></div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const feedbackData = {"items": [{"timestamp": "00:36", "category": "complaint", "topic": "Queue Management", "severity": "high", "original_telugu": "Memu 500 ticket teesukunnam andi. Maaku 2 hours pattindi. 4 o'clock nunchi kuda lines vadalaledu anta.", "translation": "We bought the 500 rupees ticket. It took us 2 hours. Apparently, they haven't moved the lines since 4:00.", "speaker": "devotee"}, {"timestamp": "00:44", "category": "grievance", "topic": "Crowd Control", "severity": "medium", "original_telugu": "Compartment lo kurchopetti... andaru godava chestunnaru. Maintenance sarigga ledu antunnaru.", "translation": "They made us sit in the compartments... everyone is fighting. They are saying the maintenance is not correct.", "speaker": "devotee"}, {"timestamp": "00:49", "category": "complaint", "topic": "Maintenance", "severity": "medium", "original_telugu": "Maintenance baledu andi.", "translation": "The maintenance is not good.", "speaker": "devotee"}, {"timestamp": "00:56", "category": "grievance", "topic": "Queue Management", "severity": "high", "original_telugu": "Naalugu gantala nunchi line lo unnam andi asalu. Asalu kaneesam manchi neellu gaani emi levu asalu.", "translation": "We have been in the line for four hours. There isn't even drinking water, nothing is there.", "speaker": "devotee"}, {"timestamp": "01:00", "category": "complaint", "topic": "Staff Behavior", "severity": "high", "original_telugu": "Pattinchinodu ledu. Eppudu inta darunam eppudu ledu andi asalu.", "translation": "There is no one to care/monitor. It has never been this horrible before.", "speaker": "devotee"}, {"timestamp": "01:05", "category": "complaint", "topic": "Facilities", "severity": "high", "original_telugu": "Etuvaanti facility ledu, 500 rupayalu ayite teesukunnaru ticket-u. Asalu facility ledu, manchi neellu levu.", "translation": "There are no facilities at all, though they took 500 rupees for the ticket. No facilities, not even drinking water.", "speaker": "devotee"}, {"timestamp": "01:11", "category": "complaint", "topic": "Amenities", "severity": "high", "original_telugu": "Water glass-lu levu akkada neellu taagadaniki. Tablet-lu vesukovali, ela vesukuntaru cheppandi?", "translation": "There are no glasses to drink water there. Tell me, how are people supposed to take their tablets?", "speaker": "devotee"}, {"timestamp": "01:17", "category": "grievance", "topic": "Health/Safety", "severity": "critical", "original_telugu": "Sugar patient-lu unnaru kada, neellu taagalante ela taagali vaallu? Tablet-lu vesukovadaniki glass-lu levu.", "translation": "There are sugar patients here, how are they supposed to drink water? There are no glasses to take medicine.", "speaker": "devotee"}, {"timestamp": "01:23", "category": "grievance", "topic": "Queue Management", "severity": "medium", "original_telugu": "Moodu gantalu ayindi anna vachi line loki.", "translation": "Brother, it has been three hours since we entered the line.", "speaker": "devotee"}, {"timestamp": "01:28", "category": "grievance", "topic": "Queue Management", "severity": "high", "original_telugu": "Naalugu gantalu ayindi anna line loki vachi. Four hours ayindi.", "translation": "It has been four hours since entering the line. Four hours.", "speaker": "devotee"}, {"timestamp": "01:38", "category": "complaint", "topic": "Ticketing/Expectations", "severity": "high", "original_telugu": "500 rupayalu... ticket... tondaraga avtadi ani vachamu. Ghorati ghoram.", "translation": "We paid 500 rupees for the ticket thinking it would be quick. It is absolutely horrible.", "speaker": "devotee"}, {"timestamp": "01:45", "category": "complaint", "topic": "Management", "severity": "high", "original_telugu": "Ee palaka mandali chestunnadi chaala worst... Asalu darshanam annadi ledu. Madyalo manchineellu levu, emi levu.", "translation": "What this governing board is doing is the worst. There is no darshan at all. No drinking water in between, nothing.", "speaker": "devotee"}, {"timestamp": "01:52", "category": "grievance", "topic": "Crowd Control", "severity": "high", "original_telugu": "Topulata. Apeyandi apeyandi antuna tostunaru.", "translation": "Pushing and shoving. Even though people are screaming to stop, they keep pushing.", "speaker": "devotee"}, {"timestamp": "01:55", "category": "complaint", "topic": "Staff Behavior/VIP Bias", "severity": "high", "original_telugu": "Anta VIP laki baaga chustunnaru andi. Saamanya bhaktulaki emi ledu.", "translation": "They are looking after the VIPs very well. There is nothing for the common devotees.", "speaker": "devotee"}, {"timestamp": "02:08", "category": "complaint", "topic": "Amenities", "severity": "critical", "original_telugu": "Manchineellu levu andi. Peddollu vacharu, peddollaki washroom ki velladaniki levu.", "translation": "There is no drinking water. Elders have come, and there are no washrooms/restrooms for them to use.", "speaker": "devotee"}, {"timestamp": "02:13", "category": "complaint", "topic": "Ticketing/Crowd Management", "severity": "high", "original_telugu": "500 rupayala ticket online lo book cheskunnam, 1000 quota. Ikkada koste 10 vela mandi unnaru. 1000 quota ticket ki 10 janalu ela vacharu?", "translation": "We booked the 500 rupee ticket online, the quota was 1000. When we came here, there were 10,000 people. How did 10,000 people come for a 1000 ticket quota?", "speaker": "devotee"}, {"timestamp": "02:22", "category": "complaint", "topic": "Queue Management/Timings", "severity": "medium", "original_telugu": "Slot vachinappatiki 5 inti daggara nunchi 6 inti varaku annaru. 5 intiki vadalali kada? Ippudu vadulutunnaru.", "translation": "The slot time was mentioned as 5 to 6. They should release the line at 5, right? They are releasing it now (late).", "speaker": "devotee"}, {"timestamp": "02:37", "category": "suggestion", "topic": "Queue Management (Swamis)", "severity": "medium", "original_telugu": "Akkada swamulu andi irumudulu ettukuni... Swamulaki separate ga ivvali andi... Vaallaki entaina separate line ivvali.", "translation": "Swamis (devotees in deeksha) are carrying Irumudi... They should provide a separate line for Swamis.", "speaker": "devotee"}, {"timestamp": "02:44", "category": "suggestion", "topic": "Amenities (Children)", "severity": "medium", "original_telugu": "Chinna pillalu unnavallaki separate paalu soukaryam andinchali, emi sadupayalu levu andi.", "translation": "They should provide milk facilities for those with small children; there are no amenities provided.", "speaker": "devotee"}], "summary": {"total_complaints": 11, "total_grievances": 6, "total_suggestions": 2, "overall_sentiment": "extremely_negative", "top_priority_issues": [{"issue": "Lack of Drinking Water & Medical Aid", "severity": "critical", "recommendation": "Immediate provision of water stations and disposable glasses/cups within the queue lines, especially for diabetics and elderly."}, {"issue": "Lack of Restrooms for Elderly", "severity": "critical", "recommendation": "Ensure accessible washrooms are available for devotees waiting in long queues."}, {"issue": "Queue Management Failure & Overcrowding", "severity": "high", "recommendation": "Investigate ticket quota vs. actual crowd numbers and strictly adhere to time slots to prevent 4-hour delays."}, {"issue": "Bias towards VIPs", "severity": "high", "recommendation": "Ensure common devotees who paid for tickets are treated with equal respect and priority."}]}, "metadata": {"video_duration": "03:12", "language": "Telugu", "location": "Dwaraka Tirumala (Chinna Tirupati)", "event": "Mukkoti Ekadasi"}, "_meta": {"source_file": "/Users/sarath/Downloads/learn/smart-darshan-sl/runs/feedback/videos/Gq-KpKgrmcM.mp4", "video_file": "/Users/sarath/Downloads/learn/smart-darshan-sl/runs/feedback/videos/Gq-KpKgrmcM.mp4", "generated_at": "2026-01-18T23:58:43.600733", "analyzer_version": "1.0"}};
+
+        function parseTimestamp(ts) {
+            const parts = ts.split(':').map(Number);
+            return parts.length === 2 ? parts[0] * 60 + parts[1] : parts[0] * 3600 + parts[1] * 60 + parts[2];
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function getVideoDuration() {
+            const duration = feedbackData.metadata?.video_duration || "03:12";
+            return parseTimestamp(duration);
+        }
+
+        function initStats() {
+            const summary = feedbackData.summary;
+            document.getElementById('complaintCount').textContent = summary.total_complaints;
+            document.getElementById('grievanceCount').textContent = summary.total_grievances;
+            document.getElementById('suggestionCount').textContent = summary.total_suggestions;
+            document.getElementById('sentimentValue').textContent = summary.overall_sentiment.replace('_', ' ');
+            document.getElementById('issueCount').textContent = feedbackData.items.length;
+            if (feedbackData.metadata?.event) document.getElementById('eventName').textContent = feedbackData.metadata.event;
+        }
+
+        function initPriorityIssues() {
+            const container = document.getElementById('priorityList');
+            container.innerHTML = '';
+            feedbackData.summary.top_priority_issues.forEach(issue => {
+                const card = document.createElement('div');
+                card.className = `priority-card ${issue.severity}`;
+                card.innerHTML = `<div class="priority-header"><span class="priority-title">${issue.issue}</span><span class="severity-badge ${issue.severity}">${issue.severity}</span></div><div class="recommendation">${issue.recommendation}</div>`;
+                container.appendChild(card);
+            });
+        }
+
+        function initTimeline() {
+            const container = document.getElementById('timelineList');
+            container.innerHTML = '';
+            feedbackData.items.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'issue-card';
+                card.dataset.index = index;
+                card.dataset.timestamp = parseTimestamp(item.timestamp);
+                card.innerHTML = `<div class="card-header"><span class="timestamp">${item.timestamp}</span><span class="category-badge ${item.category}">${item.category}</span><div class="severity-dot ${item.severity}" title="${item.severity} severity"></div></div><div class="topic">${item.topic}</div><div class="translation">${item.translation}</div><div class="original">"${item.original_telugu}"</div>`;
+                card.addEventListener('click', () => seekToTime(parseTimestamp(item.timestamp)));
+                container.appendChild(card);
+            });
+        }
+
+        function initIssueMarkers() {
+            const container = document.getElementById('issueMarkers');
+            container.innerHTML = '';
+            const duration = getVideoDuration();
+            feedbackData.items.forEach((item, index) => {
+                const marker = document.createElement('div');
+                marker.className = `issue-marker ${item.category}`;
+                marker.style.left = `${(parseTimestamp(item.timestamp) / duration) * 100}%`;
+                marker.title = `${item.timestamp} - ${item.category}: ${item.topic}`;
+                marker.addEventListener('click', (e) => { e.stopPropagation(); seekToTime(parseTimestamp(item.timestamp)); });
+                container.appendChild(marker);
+            });
+        }
+
+        const video = document.getElementById('videoPlayer');
+        const playBtn = document.getElementById('playBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressFill = document.getElementById('progressFill');
+        const timeDisplay = document.getElementById('timeDisplay');
+        let currentActiveIndex = -1;
+
+        playBtn.addEventListener('click', () => { if (video.paused) { video.play(); playBtn.textContent = '⏸'; } else { video.pause(); playBtn.textContent = '▶'; } });
+        video.addEventListener('play', () => { playBtn.textContent = '⏸'; });
+        video.addEventListener('pause', () => { playBtn.textContent = '▶'; });
+
+        video.addEventListener('timeupdate', () => {
+            const currentTime = video.currentTime;
+            const duration = video.duration || getVideoDuration();
+            progressFill.style.width = `${(currentTime / duration) * 100}%`;
+            timeDisplay.textContent = `${formatTime(currentTime)} / ${formatTime(duration)}`;
+            let activeIndex = -1;
+            for (let i = feedbackData.items.length - 1; i >= 0; i--) {
+                if (currentTime >= parseTimestamp(feedbackData.items[i].timestamp)) { activeIndex = i; break; }
+            }
+            if (activeIndex !== currentActiveIndex) { currentActiveIndex = activeIndex; updateActiveCard(activeIndex); }
+        });
+
+        progressBar.addEventListener('click', (e) => {
+            const rect = progressBar.getBoundingClientRect();
+            video.currentTime = ((e.clientX - rect.left) / rect.width) * (video.duration || getVideoDuration());
+        });
+
+        function updateActiveCard(index) {
+            document.querySelectorAll('.issue-card').forEach(card => card.classList.remove('active'));
+            const banner = document.getElementById('currentIssueBanner');
+            if (index >= 0) {
+                const card = document.querySelector(`.issue-card[data-index="${index}"]`);
+                if (card) { card.classList.add('active'); card.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+                const item = feedbackData.items[index];
+                banner.classList.remove('empty');
+                banner.innerHTML = `<span class="timestamp">${item.timestamp}</span><div class="issue-text"><div class="category-line"><span class="category-badge ${item.category}">${item.category}</span><span style="color: var(--text-muted)">•</span><span style="color: var(--text-secondary)">${item.topic}</span><span class="severity-dot ${item.severity}" style="margin-left: auto"></span></div><div class="translation">${item.translation}</div></div>`;
+            } else {
+                banner.classList.add('empty');
+                banner.innerHTML = '<span>▶ Play video to see issues highlighted in real-time</span>';
+            }
+        }
+
+        function seekToTime(seconds) { video.currentTime = seconds; video.play(); }
+
+        let activeFilter = null;
+        function initCategoryFilters() {
+            const filterCards = document.querySelectorAll('.stat-card[data-filter]');
+            filterCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const filter = card.dataset.filter;
+                    if (activeFilter === filter) {
+                        activeFilter = null;
+                        card.classList.remove('filter-active');
+                        clearFilter();
+                    } else {
+                        activeFilter = filter;
+                        filterCards.forEach(c => c.classList.remove('filter-active'));
+                        card.classList.add('filter-active');
+                        applyFilter(filter);
+                    }
+                });
+            });
+        }
+
+        function applyFilter(category) {
+            document.querySelectorAll('.issue-card').forEach(card => {
+                const cardCategory = feedbackData.items[card.dataset.index].category;
+                if (cardCategory === category) {
+                    card.classList.remove('dimmed');
+                    card.classList.add('highlighted', category);
+                } else {
+                    card.classList.add('dimmed');
+                    card.classList.remove('highlighted', 'complaint', 'grievance', 'suggestion');
+                }
+            });
+            const firstMatch = document.querySelector('.issue-card.highlighted');
+            if (firstMatch) firstMatch.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function clearFilter() {
+            document.querySelectorAll('.issue-card').forEach(card => {
+                card.classList.remove('dimmed', 'highlighted', 'complaint', 'grievance', 'suggestion');
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initStats();
+            initPriorityIssues();
+            initTimeline();
+            initIssueMarkers();
+            initCategoryFilters();
+        });
+    </script>
+</body>
+</html>
