@@ -74,34 +74,24 @@ proxy: {
 
 ## PHASE 1: Audit Source Videos
 
-### Task 1.1: Sample wheelchair_darshan.mp4
-- [ ] Extract frames at: 100s, 200s, 300s, 400s, 500s, 600s, 700s, 800s, 900s
-- [ ] Look for:
-  - Queue footage (people in line)
-  - Gate with bidirectional traffic
-  - Crowded area (safety monitoring)
-  - People lingering/dwelling in one spot
-- [ ] Document timestamps with descriptions
+### Task 1.1: Sample wheelchair_darshan.mp4 ✅ DONE
+- [x] Extract frames at: 100s, 200s, 300s, 400s, 500s, 600s, 700s, 800s, 900s
+- [x] Look for queue, gate, crowd, dwelling footage
+- [x] Document timestamps - limited usability, 600s has crowd
 
-### Task 1.2: Sample tirumala_ai_cctv.mp4
-- [ ] Extract frames at: 30s, 60s, 90s, 120s, 150s, 180s, 210s
-- [ ] Look for:
-  - Queue footage
-  - Gate activity
-  - Crowd scenes
-- [ ] Document timestamps with descriptions
+### Task 1.2: Sample tirumala_ai_cctv.mp4 ✅ DONE
+- [x] Extract frames at: 30s, 60s, 90s, 120s, 150s, 180s, 210s
+- [x] Result: NDTV news with heavy overlays, mostly scenic shots
 
-### Task 1.3: Sample tirupati_queue.mp4
-- [ ] Extract frames at: 30s, 60s, 90s, 120s, 150s, 180s
-- [ ] Look for:
-  - Actual queue footage (despite news overlays)
-  - Assess if overlays can be cropped out
-- [ ] Document timestamps with descriptions
+### Task 1.3: Sample tirupati_queue.mp4 ✅ DONE
+- [x] Extract frames at: 30s, 60s, 90s, 120s, 145s, 150s, 155s, 175s, 180s
+- [x] **BEST SOURCE FOUND**: 145s-185s has excellent crowd/queue/gate footage
+- [x] News overlay is minimal (header bar only), video fills frame
 
-### Task 1.4: Create Source Video Audit Document
-- [ ] Create file: `SOURCE_VIDEO_AUDIT.md`
-- [ ] Document all usable segments found
-- [ ] Include: video name, timestamp, duration, content description, crop needed
+### Task 1.4: Create Source Video Audit Document ✅ DONE
+- [x] Created file: `SOURCE_VIDEO_AUDIT.md`
+- [x] Documented all usable segments found
+- [x] Recommended tirupati_queue.mp4 for clips 02, 03, 05, 07
 
 ---
 
