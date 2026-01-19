@@ -95,40 +95,31 @@ proxy: {
 
 ---
 
-## PHASE 2: Extract Corrected Clips
+## PHASE 2: Extract Corrected Clips ✅ COMPLETED
 
-### Task 2.1: Fix clip_02_queue.mp4
+### Task 2.1: Fix clip_02_queue.mp4 ✅ DONE
 **Requirement:** Must show people standing IN A LINE/QUEUE formation
-- [ ] Select best source from audit (Phase 1)
-- [ ] Identify 10-second segment with clear queue
-- [ ] Run FFmpeg extraction command
-- [ ] Verify output shows queue formation
+- [x] Source: tirupati_queue.mp4 at 170s
+- [x] Command: `ffmpeg -ss 170 -i tirupati_queue.mp4 -t 10 -c:v libx264 -crf 23 -an clip_02_queue.mp4`
+- [x] Verified: Shows queue corridor with people in line formation
 
-**Expected FFmpeg command format:**
-```bash
-ffmpeg -ss [START] -i [SOURCE].mp4 -t 10 -vf "[CROP_IF_NEEDED]" -c:v libx264 -crf 23 -an clip_02_queue.mp4
-```
-
-### Task 2.2: Fix clip_03_gate.mp4
+### Task 2.2: Fix clip_03_gate.mp4 ✅ DONE
 **Requirement:** Must show gate/entrance with people entering AND exiting
-- [ ] Select best source from audit (Phase 1)
-- [ ] Identify 10-second segment with gate + bidirectional traffic
-- [ ] Run FFmpeg extraction command
-- [ ] Verify output shows gate activity
+- [x] Source: tirupati_queue.mp4 at 142s
+- [x] Command: `ffmpeg -ss 142 -i tirupati_queue.mp4 -t 10 -c:v libx264 -crf 23 -an clip_03_gate.mp4`
+- [x] Verified: Shows gate with dense crowd flowing through barriers
 
-### Task 2.3: Fix clip_05_safety.mp4
+### Task 2.3: Fix clip_05_safety.mp4 ✅ DONE
 **Requirement:** Must show crowded area suitable for safety monitoring
-- [ ] Select best source from audit (Phase 1)
-- [ ] Identify 10-second segment with visible crowd
-- [ ] Run FFmpeg extraction command
-- [ ] Verify output shows crowd scene
+- [x] Source: tirupati_queue.mp4 at 153s
+- [x] Command: `ffmpeg -ss 153 -i tirupati_queue.mp4 -t 10 -c:v libx264 -crf 23 -an clip_05_safety.mp4`
+- [x] Verified: Shows dense crowd suitable for safety monitoring
 
-### Task 2.4: Fix clip_07_dwell.mp4
+### Task 2.4: Fix clip_07_dwell.mp4 ✅ DONE
 **Requirement:** Must show multiple people lingering/staying in an area
-- [ ] Select best source from audit (Phase 1)
-- [ ] Identify 10-second segment with people dwelling (not walking through)
-- [ ] Run FFmpeg extraction command
-- [ ] Verify output shows dwelling behavior
+- [x] Source: tirupati_queue.mp4 at 178s
+- [x] Command: `ffmpeg -ss 178 -i tirupati_queue.mp4 -t 10 -c:v libx264 -crf 23 -an clip_07_dwell.mp4`
+- [x] Verified: Shows dense queue area with people waiting/dwelling
 
 ---
 
