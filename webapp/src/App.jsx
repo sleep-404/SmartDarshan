@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { Routes, Route as RouterRoute, useNavigate, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, Video, TrendingUp, DoorOpen, Bell, MessageCircle,
   Activity, MapPin, Route, Users, AlertTriangle, MessageSquare,
@@ -6,28 +7,31 @@ import {
   ArrowDown, Clock, CheckCircle, ExternalLink, X, Zap, Sparkles,
   Megaphone, Shield, AlertCircle
 } from 'lucide-react';
+import VideoAnalytics from './pages/VideoAnalytics';
+import DemoSlide1 from './pages/DemoSlide1';
+import DemoSlide2 from './pages/DemoSlide2';
 import './index.css';
 
 // ============================================================================
 // NAVIGATION ITEMS
 // ============================================================================
 const NAV_ITEMS = [
-  { id: 'command-center', label: 'Command Center', icon: LayoutDashboard, group: 1, active: true },
-  { id: 'video-analytics', label: 'Video Analytics', icon: Video, group: 1 },
-  { id: 'crowd-forecast', label: 'Crowd Forecast', icon: TrendingUp, group: 1 },
-  { id: 'gate-queue', label: 'Gate & Queue', icon: DoorOpen, group: 1 },
-  { id: 'alerts', label: 'Alerts', icon: Bell, group: 1, badge: 2 },
-  { id: 'chatbot', label: 'Chatbot Monitor', icon: MessageCircle, group: 1 },
-  { id: 'system-health', label: 'System Health', icon: Activity, group: 1 },
-  { id: 'zone-monitor', label: 'Zone Monitor', icon: MapPin, group: 2 },
-  { id: 'spatial-flow', label: 'Spatial Flow', icon: Route, group: 2 },
-  { id: 'staff-deployment', label: 'Staff Deployment', icon: Users, group: 2 },
-  { id: 'incidents', label: 'Incidents', icon: AlertTriangle, group: 2 },
-  { id: 'feedback-analytics', label: 'Feedback Analytics', icon: MessageSquare, group: 2 },
-  { id: 'analytics-reports', label: 'Analytics & Reports', icon: BarChart3, group: 3 },
-  { id: 'amenities', label: 'Amenities', icon: Utensils, group: 3 },
-  { id: 'parking', label: 'Parking', icon: Car, group: 3 },
-  { id: 'settings', label: 'Settings', icon: Settings, group: 3 },
+  { id: 'command-center', label: 'Command Center', icon: LayoutDashboard, group: 1, path: '/' },
+  { id: 'video-analytics', label: 'Video Analytics', icon: Video, group: 1, path: '/video-analytics' },
+  { id: 'crowd-forecast', label: 'Crowd Forecast', icon: TrendingUp, group: 1, path: '/crowd-forecast' },
+  { id: 'gate-queue', label: 'Gate & Queue', icon: DoorOpen, group: 1, path: '/gate-queue' },
+  { id: 'alerts', label: 'Alerts', icon: Bell, group: 1, badge: 2, path: '/alerts' },
+  { id: 'chatbot', label: 'Chatbot Monitor', icon: MessageCircle, group: 1, path: '/chatbot' },
+  { id: 'system-health', label: 'System Health', icon: Activity, group: 1, path: '/system-health' },
+  { id: 'zone-monitor', label: 'Zone Monitor', icon: MapPin, group: 2, path: '/zone-monitor' },
+  { id: 'spatial-flow', label: 'Spatial Flow', icon: Route, group: 2, path: '/spatial-flow' },
+  { id: 'staff-deployment', label: 'Staff Deployment', icon: Users, group: 2, path: '/staff-deployment' },
+  { id: 'incidents', label: 'Incidents', icon: AlertTriangle, group: 2, path: '/incidents' },
+  { id: 'feedback-analytics', label: 'Feedback Analytics', icon: MessageSquare, group: 2, path: '/feedback-analytics' },
+  { id: 'analytics-reports', label: 'Analytics & Reports', icon: BarChart3, group: 3, path: '/analytics-reports' },
+  { id: 'amenities', label: 'Amenities', icon: Utensils, group: 3, path: '/amenities' },
+  { id: 'parking', label: 'Parking', icon: Car, group: 3, path: '/parking' },
+  { id: 'settings', label: 'Settings', icon: Settings, group: 3, path: '/settings' },
 ];
 
 // ============================================================================
@@ -56,7 +60,7 @@ const getScoreColor = (score, thresholds = { low: 40, high: 70 }) => {
 // ============================================================================
 // SIDEBAR COMPONENT
 // ============================================================================
-function Sidebar({ activeItem, systemStatus, hasUnacknowledgedAlerts }) {
+function Sidebar({ activeItem, systemStatus, hasUnacknowledgedAlerts, onNavigate }) {
   const renderNavGroup = (groupId) => {
     const items = NAV_ITEMS.filter(item => item.group === groupId);
     return items.map((item) => {
@@ -66,6 +70,7 @@ function Sidebar({ activeItem, systemStatus, hasUnacknowledgedAlerts }) {
       return (
         <button
           key={item.id}
+          onClick={() => onNavigate(item.path)}
           className={`relative h-11 w-full flex items-center gap-3 px-3 rounded-lg transition-colors duration-200 cursor-pointer
             ${isActive
               ? 'bg-[rgba(14,165,233,0.1)] border-l-3 border-l-[#0EA5E9]'
@@ -1289,14 +1294,115 @@ function OfflineBanner({ lastUpdate, onDismiss }) {
 }
 
 // ============================================================================
+// COMMAND CENTER PAGE COMPONENT
+// ============================================================================
+function CommandCenter({ data, loading, error, isOffline, showOfflineBanner, setShowOfflineBanner, fetchData, hasUnacknowledgedAlerts, onAcknowledgeAlert, onDismissAlert, onAcknowledgeAllCritical }) {
+  return (
+    <>
+      {/* Header */}
+      {data && (
+        <Header
+          temple={data.temple}
+          user={data.user}
+          peakWindow={data.temple.peakWindow}
+          dataFreshness={isOffline ? { status: 'offline' } : data.dataFreshness}
+          dayType={data.temple.dayType}
+        />
+      )}
+
+      {/* Offline Banner */}
+      {showOfflineBanner && (
+        <OfflineBanner
+          lastUpdate="10:42 AM"
+          onDismiss={() => setShowOfflineBanner(false)}
+        />
+      )}
+
+      {/* Critical Alert Banner */}
+      {data && (
+        <CriticalAlertBanner
+          alerts={data.alerts}
+          onAcknowledgeAll={onAcknowledgeAllCritical}
+          onViewAlerts={() => {}}
+        />
+      )}
+
+      {/* Main Content Area */}
+      <main className="flex-1 p-6">
+        {loading ? (
+          <LoadingSkeleton />
+        ) : error && !data ? (
+          <ErrorState onRetry={fetchData} message={error} />
+        ) : data ? (
+          <div className="space-y-7">
+            {/* Key Metrics Section */}
+            <section aria-label="Key Metrics">
+              <div className="grid grid-cols-4 gap-4">
+                <LiveFootfallCard data={data.metrics.liveFootfall} />
+                <WaitTimeCard data={data.metrics.darshanWaitTime} />
+                <CrowdMovementCard data={data.metrics.crowdMovement} />
+                <GateOverviewCard data={data.metrics.gates} />
+              </div>
+            </section>
+
+            {/* Composite Scores Section */}
+            <section aria-label="Composite Scores">
+              <div className="grid grid-cols-4 gap-4">
+                <CrowdStressCard data={data.compositeScores.crowdStress} />
+                <ZoneHealthCard data={data.compositeScores.zoneHealth} />
+                <IncidentRiskCard data={data.compositeScores.incidentRisk} />
+                <DevoteeExperienceCard data={data.compositeScores.devoteeExperience} />
+              </div>
+            </section>
+
+            {/* Zone Density + Gate Status Split Panel */}
+            <section aria-label="Zone and Gate Status" className="grid grid-cols-12 gap-4">
+              <div className="col-span-7">
+                <ZoneDensityHeatmap zones={data.zones} />
+              </div>
+              <div className="col-span-5">
+                <GateStatusPanel gates={data.gateDetails} />
+              </div>
+            </section>
+
+            {/* Active Alerts Panel */}
+            <section aria-label="Active Alerts">
+              <AlertsPanel
+                alerts={data.alerts}
+                sparkline={data.alertSparkline}
+                onAcknowledge={onAcknowledgeAlert}
+                onDismiss={onDismissAlert}
+              />
+            </section>
+          </div>
+        ) : null}
+      </main>
+
+      {/* Quick Actions FAB */}
+      <QuickActionsFab />
+    </>
+  );
+}
+
+// ============================================================================
 // MAIN APP COMPONENT
 // ============================================================================
 function App() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isOffline, setIsOffline] = useState(false);
   const [showOfflineBanner, setShowOfflineBanner] = useState(false);
+
+  // Determine active nav item from current path
+  const getActiveItem = () => {
+    const path = location.pathname;
+    const navItem = NAV_ITEMS.find(item => item.path === path);
+    return navItem?.id || 'command-center';
+  };
 
   const fetchData = useCallback(async () => {
     try {
@@ -1356,99 +1462,55 @@ function App() {
     a => a.status === 'unacknowledged' && (a.severity === 'critical' || a.severity === 'warning')
   );
 
+  const handleNavigate = (path) => {
+    navigate(path);
+  };
+
   return (
     <div className="min-h-screen bg-pattern">
       {/* Sidebar */}
       <Sidebar
-        activeItem="command-center"
+        activeItem={getActiveItem()}
         systemStatus={data?.systemStatus || 'operational'}
         hasUnacknowledgedAlerts={hasUnacknowledgedAlerts}
+        onNavigate={handleNavigate}
       />
 
       {/* Main Content */}
       <div className="ml-[72px] min-h-screen flex flex-col">
-        {/* Header */}
-        {data && (
-          <Header
-            temple={data.temple}
-            user={data.user}
-            peakWindow={data.temple.peakWindow}
-            dataFreshness={isOffline ? { status: 'offline' } : data.dataFreshness}
-            dayType={data.temple.dayType}
+        <Routes>
+          <RouterRoute
+            path="/"
+            element={
+              <CommandCenter
+                data={data}
+                loading={loading}
+                error={error}
+                isOffline={isOffline}
+                showOfflineBanner={showOfflineBanner}
+                setShowOfflineBanner={setShowOfflineBanner}
+                fetchData={fetchData}
+                hasUnacknowledgedAlerts={hasUnacknowledgedAlerts}
+                onAcknowledgeAlert={handleAcknowledgeAlert}
+                onDismissAlert={handleDismissAlert}
+                onAcknowledgeAllCritical={handleAcknowledgeAllCritical}
+              />
+            }
           />
-        )}
-
-        {/* Offline Banner */}
-        {showOfflineBanner && (
-          <OfflineBanner
-            lastUpdate="10:42 AM"
-            onDismiss={() => setShowOfflineBanner(false)}
-          />
-        )}
-
-        {/* Critical Alert Banner */}
-        {data && (
-          <CriticalAlertBanner
-            alerts={data.alerts}
-            onAcknowledgeAll={handleAcknowledgeAllCritical}
-            onViewAlerts={() => {}}
-          />
-        )}
-
-        {/* Main Content Area */}
-        <main className="flex-1 p-6">
-          {loading ? (
-            <LoadingSkeleton />
-          ) : error && !data ? (
-            <ErrorState onRetry={fetchData} message={error} />
-          ) : data ? (
-            <div className="space-y-7">
-              {/* Key Metrics Section */}
-              <section aria-label="Key Metrics">
-                <div className="grid grid-cols-4 gap-4">
-                  <LiveFootfallCard data={data.metrics.liveFootfall} />
-                  <WaitTimeCard data={data.metrics.darshanWaitTime} />
-                  <CrowdMovementCard data={data.metrics.crowdMovement} />
-                  <GateOverviewCard data={data.metrics.gates} />
-                </div>
-              </section>
-
-              {/* Composite Scores Section */}
-              <section aria-label="Composite Scores">
-                <div className="grid grid-cols-4 gap-4">
-                  <CrowdStressCard data={data.compositeScores.crowdStress} />
-                  <ZoneHealthCard data={data.compositeScores.zoneHealth} />
-                  <IncidentRiskCard data={data.compositeScores.incidentRisk} />
-                  <DevoteeExperienceCard data={data.compositeScores.devoteeExperience} />
-                </div>
-              </section>
-
-              {/* Zone Density + Gate Status Split Panel */}
-              <section aria-label="Zone and Gate Status" className="grid grid-cols-12 gap-4">
-                <div className="col-span-7">
-                  <ZoneDensityHeatmap zones={data.zones} />
-                </div>
-                <div className="col-span-5">
-                  <GateStatusPanel gates={data.gateDetails} />
-                </div>
-              </section>
-
-              {/* Active Alerts Panel */}
-              <section aria-label="Active Alerts">
-                <AlertsPanel
-                  alerts={data.alerts}
-                  sparkline={data.alertSparkline}
-                  onAcknowledge={handleAcknowledgeAlert}
-                  onDismiss={handleDismissAlert}
-                />
-              </section>
+          <RouterRoute path="/video-analytics" element={<VideoAnalytics />} />
+          <RouterRoute path="/demo/slide1" element={<DemoSlide1 />} />
+          <RouterRoute path="/demo/slide2" element={<DemoSlide2 />} />
+          {/* Placeholder routes for other pages */}
+          <RouterRoute path="*" element={
+            <div className="flex-1 flex items-center justify-center">
+              <div className="text-center">
+                <h2 className="text-2xl font-semibold text-[#F1F5F9] mb-2">Coming Soon</h2>
+                <p className="text-[#94A3B8]">This page is under development</p>
+              </div>
             </div>
-          ) : null}
-        </main>
+          } />
+        </Routes>
       </div>
-
-      {/* Quick Actions FAB */}
-      <QuickActionsFab />
     </div>
   );
 }
