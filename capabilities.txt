@@ -1,0 +1,211 @@
+## POC Deliverables Mapping & Priority Matrix
+
+### POC Success Criteria (from challenge.json)
+| Criteria | Target | Measurement Source |
+|----------|--------|-------------------|
+| Real-time crowd density estimation & congestion detection | ≥80% accuracy | Video Analytics |
+| Peak-hour prediction using historical data | ≥80% accuracy | Predictive Model |
+| Multilingual chatbot/voice assistant responses | ≥80% accuracy | NLP/Speech |
+
+---
+
+## TIER 1: POC Success Criteria - Direct Contributors
+
+### 1.1 Crowd Density & Congestion (Success Criteria #1)
+
+| Analytics | Expected Accuracy | Maturity | POC Deliverable | Rationale |
+|-----------|------------------|----------|-----------------|-----------|
+| People counting | 90-95% | Production-ready | Core density calculation | Foundation for all crowd metrics |
+| Crowd density estimation (people/sq.m) | 85-92% | Production-ready | **Primary POC metric** | Directly measured for success criteria |
+| Congestion detection (density + low velocity) | 82-88% | Production-ready | **Primary POC metric** | Combined metric, high confidence |
+| Zone occupancy percentage | 88-93% | Production-ready | Dashboard display | Derived from counting |
+| Flow rate (people/minute) | 85-90% | Production-ready | Queue time prediction input | Well-established technique |
+| Walking velocity detection | 80-85% | Production-ready | Congestion indicator | Optical flow, mature tech |
+
+**Recommendation:** These 6 analytics form your **core video analytics engine**. Build and validate first.
+
+---
+
+### 1.2 Peak Hour Prediction (Success Criteria #2)
+
+| Analytics | Expected Accuracy | Maturity | POC Deliverable | Rationale |
+|-----------|------------------|----------|-----------------|-----------|
+| Historical footfall pattern modeling | 85-90% | Production-ready | Prediction model training | 5 years of data available |
+| Event-type classification impact | 80-88% | Production-ready | Festival-specific predictions | Ekadasi vs Sankranthi patterns |
+| Weather correlation modeling | 75-82% | Moderate | Weather adjustment factor | 22-29°C, humidity data available |
+| Day-of-week patterns | 88-92% | Production-ready | Weekend vs weekday baseline | Clear Saturday/Sunday spikes in data |
+| Hourly distribution modeling | 82-88% | Production-ready | Hour-wise predictions | 8AM-1:30PM peak documented |
+
+**Recommendation:** Time-series forecasting (ARIMA, Prophet, or LSTM) on 5-year daily data. Weather as feature, event calendar as categorical variable.
+
+---
+
+### 1.3 Multilingual Chatbot/Voice (Success Criteria #3)
+
+| Analytics | Expected Accuracy | Maturity | POC Deliverable | Rationale |
+|-----------|------------------|----------|-----------------|-----------|
+| Speech-to-text (Telugu) | 85-90% | Production-ready | Voice input processing | Google/Azure STT supports Telugu |
+| Speech-to-text (Hindi) | 90-95% | Production-ready | Voice input processing | Mature support |
+| Speech-to-text (English) | 95-98% | Production-ready | Voice input processing | Best accuracy |
+| Intent classification | 85-92% | Production-ready | Query understanding | Standard NLU |
+| Response generation accuracy | 88-93% | Production-ready | Correct information delivery | Template + dynamic data |
+| Text-to-speech (Telugu/Hindi/English) | 90-95% | Production-ready | Voice output | All three well-supported |
+
+**Recommendation:** Use established STT/TTS APIs. Build intent classifier for: wait_time, gate_status, facility_location, safety_advisory, general_info.
+
+---
+
+## TIER 2: POC Completeness - Required for Operational Demo
+
+### 2.1 Queue & Gate Management
+
+| Analytics | Expected Accuracy | Maturity | POC Deliverable | Priority |
+|-----------|------------------|----------|-----------------|----------|
+| Queue length estimation | 85-90% | Production-ready | Wait time display | P0 |
+| Queue wait time prediction | 80-85% | Moderate | Devotee communication | P0 |
+| Gate entry/exit counting | 90-95% | Production-ready | Gate load balancing | P0 |
+| Service rate per counter | 85-90% | Production-ready | Counter optimization | P1 |
+| Queue formation quality | 75-80% | Moderate | Staff intervention trigger | P1 |
+
+---
+
+### 2.2 Automated Alerts
+
+| Analytics | Expected Accuracy | Maturity | POC Deliverable | Priority |
+|-----------|------------------|----------|-----------------|----------|
+| Density threshold breach | 90-95% | Production-ready | Auto-trigger PA/SMS | P0 |
+| Congestion alert | 85-90% | Production-ready | Staff notification | P0 |
+| Crowd surge detection | 80-85% | Moderate | Emergency protocol trigger | P0 |
+| Blocked exit detection | 75-82% | Moderate | Safety alert | P1 |
+
+---
+
+### 2.3 Feedback Analytics (1 year audio/video data)
+
+| Analytics | Expected Accuracy | Maturity | POC Deliverable | Priority |
+|-----------|------------------|----------|-----------------|----------|
+| Transcription (Telugu) | 85-90% | Production-ready | Searchable feedback | P1 |
+| Transcription (Hindi/English) | 90-95% | Production-ready | Searchable feedback | P1 |
+| Sentiment classification | 82-88% | Production-ready | Satisfaction scoring | P1 |
+| Topic/complaint categorization | 80-85% | Production-ready | Issue routing | P1 |
+| Recurring issue detection | 85-90% | Production-ready | Systemic fixes | P2 |
+| Emotion from facial (frontal video) | 75-82% | Moderate | Cross-validation | P2 |
+| Emotion from voice tone | 78-85% | Moderate | Urgency scoring | P2 |
+
+---
+
+## TIER 3: Differentiation - Demonstrates Advanced Capability
+
+### 3.1 Safety & Anomaly Detection
+
+| Analytics | Expected Accuracy | Maturity | POC Deliverable | Priority |
+|-----------|------------------|----------|-----------------|----------|
+| Fall detection | 75-82% | Moderate | Medical alert | P1 |
+| Counter-flow detection | 80-85% | Production-ready | Queue discipline | P1 |
+| Stampede pattern detection | 70-78% | Experimental | Early warning | P1 |
+| Restricted area intrusion | 85-90% | Production-ready | Security alert | P2 |
+| Abandoned object | 75-80% | Moderate | Security protocol | P2 |
+| Fighting/altercation | 65-75% | Experimental | Security dispatch | P3 |
+
+---
+
+### 3.2 Accessibility Detection
+
+| Analytics | Expected Accuracy | Maturity | POC Deliverable | Priority |
+|-----------|------------------|----------|-----------------|----------|
+| Wheelchair detection | 85-90% | Production-ready | Priority routing | P1 |
+| Walking aid detection | 80-85% | Moderate | Accessibility support | P2 |
+| Elderly gait detection | 70-78% | Experimental | Priority lane | P2 |
+| Child detection (height) | 82-88% | Production-ready | Family tracking | P2 |
+
+---
+
+### 3.3 Spatial Analytics
+
+| Analytics | Expected Accuracy | Maturity | POC Deliverable | Priority |
+|-----------|------------------|----------|-----------------|----------|
+| Direction of movement heatmap | 85-90% | Production-ready | Flow optimization | P1 |
+| Dwell time per zone | 80-85% | Production-ready | Bottleneck identification | P1 |
+| Path/trajectory tracking | 75-82% | Moderate | Layout optimization | P2 |
+| Bottleneck prediction | 70-78% | Experimental | Proactive intervention | P2 |
+
+---
+
+## POC Build Phases
+
+### Phase 1: Core (Weeks 1-4) - Meet Success Criteria
+
+| Component | Analytics Included | Accuracy Target |
+|-----------|-------------------|-----------------|
+| **Video Analytics Engine** | People counting, density estimation, congestion detection, flow rate, velocity | ≥80% |
+| **Prediction Model** | Historical patterns, event-type, weather, hourly distribution | ≥80% |
+| **Chatbot MVP** | STT (3 languages), intent classification, response generation, TTS | ≥80% |
+| **Alert System** | Density threshold, congestion alert | ≥85% |
+
+**Deliverables:**
+- Live density heatmap (11 zones)
+- 24-hour footfall prediction
+- Working chatbot (WhatsApp/IVR)
+- Threshold-based PA triggers
+
+---
+
+### Phase 2: Operational (Weeks 5-8) - Pilot Readiness
+
+| Component | Analytics Added | Accuracy Target |
+|-----------|-----------------|-----------------|
+| **Queue Management** | Queue length, wait time, gate counting | ≥82% |
+| **Feedback Processing** | Transcription, sentiment, categorization | ≥80% |
+| **Safety Layer** | Fall detection, crowd surge, counter-flow | ≥75% |
+| **Accessibility** | Wheelchair detection | ≥85% |
+
+**Deliverables:**
+- Gate recommendation engine
+- Feedback analytics dashboard
+- Safety alert integration
+- Priority lane triggers
+
+---
+
+### Phase 3: Optimization (Weeks 9-12) - Pilot Run & Tuning
+
+| Component | Analytics Added | Accuracy Target |
+|-----------|-----------------|-----------------|
+| **Advanced Prediction** | Refined event models, humidity correlation | ≥85% |
+| **Spatial Intelligence** | Dwell time, direction heatmaps, path analysis | ≥80% |
+| **Feedback Deep Dive** | Emotion detection, recurring issues | ≥78% |
+
+**Deliverables:**
+- Model retraining with pilot data
+- Accuracy validation reports
+- Optimization recommendations
+
+---
+
+## Accuracy Risk Matrix
+
+| Analytics | Target | Risk Level | Mitigation |
+|-----------|--------|------------|------------|
+| Crowd density | ≥80% | Low | Mature tech, multiple model options |
+| Peak prediction | ≥80% | Low | 5 years data, clear patterns |
+| Chatbot accuracy | ≥80% | Medium | Telugu STT needs validation |
+| Fall detection | ≥75% | Medium | Pose estimation at 4MP may struggle |
+| Stampede detection | ≥70% | High | Limited training data for temple context |
+| Elderly gait | ≥70% | High | Requires custom model training |
+| Emotion (facial) | ≥75% | Medium | Only for frontal feedback videos |
+
+---
+
+## Recommended First 30-Day Sprint
+
+| Week | Focus | Deliverable |
+|------|-------|-------------|
+| Week 1 | People counting model on sample CCTV footage | Counting accuracy benchmark |
+| Week 2 | Density estimation + congestion logic | Zone density dashboard prototype |
+| Week 3 | Prediction model on 5-year historical data | Hourly/daily forecast API |
+| Week 4 | Chatbot pipeline (STT → Intent → Response → TTS) | WhatsApp bot MVP |
+
+This gives you measurable progress against all 3 success criteria by Day 30.
+
+---
+
