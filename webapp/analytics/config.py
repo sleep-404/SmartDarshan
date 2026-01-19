@@ -48,6 +48,17 @@ WS_UPDATE_INTERVAL = 1.0  # Seconds between WebSocket updates
 
 # Video file mapping
 VIDEO_FILES: Dict[str, str] = {
+    # Demo clips (10 seconds each, looping) - verified South Indian temple footage
+    "density": "clips/clip_01_density.mp4",      # Crowd density - festival crowd
+    "queue": "clips/clip_02_queue.mp4",          # Queue analysis - Tirumala queue
+    "gate": "clips/clip_03_gate.mp4",            # Gate counting - Tirupati gate entry
+    "flow": "clips/clip_04_flow.mp4",            # Flow detection - festival movement
+    "safety": "clips/clip_05_safety.mp4",        # Safety monitoring - Tirupati infrastructure
+    "accessibility": "clips/clip_06_accessibility.mp4",  # Wheelchair user at Tirupati
+    "dwell": "clips/clip_07_dwell.mp4",          # Dwell time - Anna Prasadam hall
+    "anomaly": "clips/clip_08_anomaly.mp4",      # Anomaly detection - Tirumala aerial
+
+    # Original full-length videos (for extended testing)
     "tirupati_queue": "tirupati_queue.mp4",
     "ayodhya_crowd": "ayodhya_crowd.mp4",
     "temple_entrance": "temple_entrance.mp4",
